@@ -1,0 +1,264 @@
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            EXAMEN TEÓRICO — PERCEPTRÓN, MLP Y CNN (GRUPO B)
+
+                            Eduardo Alcaraz
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+1 Datos del alumno
+══════════════════
+
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Nombre   Julian
+   Grupo    B 
+   Fecha    3 de Noviembre 2026
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+2 Pregunta 1 — Por qué no basta “una sola neurona”
+══════════════════════════════════════════════════
+
+  1. Resume el funcionamiento de un perceptrón como “regla de decisión”.
+  2. Explica la noción de *frontera lineal* sin escribir fórmulas.
+  3. Da un ejemplo (aunque sea inventado) donde esa frontera *no*
+     alcanza.
+
+2.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Cómo funciona un perceptrón:
+   Básicamente recibe varios datos de entrada y le da más peso a los que considera más importantes y menos a los que no, suma todo junto con un empujon inicial y al final se fija si esa suma pasa o no pasa de cierto límite, si lo pasa, dice "sí" (1), y si no llega, dice "no" (0), es como poner una condición fija para decidir algo
+
+2. Qué es una frontera lineal:
+   Es como tener puntos en una hoja de papel de dos colores diferentes. Decir que la frontera es lineal significa que puedes separarlos usando una sola línea recta hecha con regla. De un lado de la raya quedan los de un tipo y del otro lado los demás, sin doblar la línea ni hacer curvas
+
+3. Ejemplo donde no alcanza:
+   Saber si una persona va a salir a correr según el clima y la hora. Si hace mucho calor pero ya es de noche, sale a corre, si hace frio y es de día, también sale. Pero si hace un calor a pleno mediodía, o si hace frío extremo a medianoche, no sale. En una gráfica los casos de "sí sale" quedan cruzados en esquinas opuestas, así que no hay forma de pasar una sola línea recta que los separe de los días que se queda en casa
+
+
+3 Pregunta 2 — CNN: de píxeles a mapas
+══════════════════════════════════════
+
+  1. ¿Qué problema de *estructura espacial* ignora un MLP si aplana la
+     foto?
+  2. ¿Qué significa que un mismo filtro se aplique en toda la imagen?
+  3. Además de clasificación de objetos, cita *dos* usos donde la CNN
+     encaja bien.
+
+3.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Problema de aplanar la imagen en un MLP:
+   Al convertir la foto cuadrada en una tira larga de números uno detrás de otro, la red olvida qué píxel estaba arriba o abajo de cual. Por ejemplo la ceja y el ojo están juntos en la foto, pero en la tira larga quedan demasiado lejos. El MLP no entiende de formas ni de vecindad entre píxeles, solo ve números sueltos
+
+2. Qué significa aplicar el mismo filtro en toda la foto:
+   Significa que usamos la misma detector para revisar la imagen completa pedazo por pedazo. Si ese filtro aprende a detectar una línea diagonal o una orilla, va a poder encontrarla sin importar si está en la esquina de arriba o en el centro, porque se usa exactamente la misma regla en todos lados y no tenemos que reentrenar una neurona para cada parte de la foto
+
+3. Dos usos donde sirve una CNN:
+   - Encontrar tumores o manchas en radiografías y resonancias médicas
+   - Detectar coches y personas en tiempo real con recuadros para coches autónomos o cámaras de seguridad
+
+
+4 Pregunta 3 — Softmax, clases y decisiones
+═══════════════════════════════════════
+
+  1. Diferencia un problema *binario* de uno *multiclase* en términos de
+     salida de la red.
+  2. ¿Qué lectura le das a las probabilidades que produce un softmax?
+  3. Imagina tres carpetas de imágenes (tres riesgos o tres animales):
+     ¿qué arquitectura de *salida* usarías y por qué?
+
+4.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Problema binario vs multiclase en la salida:
+   - Binario: Solo tiene una neurona al final que te da un número entre 0 y 1, que indica qué tan seguro está de que sea "sí" frente a "no"
+   - Multiclase: Tiene varias neuronas al final, exactamente una por cada categoría posible, y entre todas se reparten las opciones usando softmax
+
+2. Qué significan las probabilidades de softmax:
+   Softmax agarra los números raros que saca la red y los convierte en porcentajes que suman 100%. Cada número te dice qué tan convencido está el modelo de que la foto pertenece a esa clase en específico comparada con las demás
+
+3. Arquitectura de salida para 3 carpetas:
+   - capa densa de 3 neuronas: `Dense(3)`
+   - Con activación `softmax`: `activation='softmax'`
+   - Por qué: Son 3 opciones distintas y una imagen solo puede pertenecer a una carpeta a la vez. Así la red nos da la probabilidad de cada una y simplemente nos quedamos con la más alta
+
+
+5 Pregunta 4 — MLP: profundidad con sentido
+═══════════════════════════════════════════
+
+  1. ¿Qué ganas al apilar capas densas con activaciones no lineales?
+  2. ¿Qué riesgo aparece si la red es *demasiado* grande para tus datos?
+  3. Relaciona “capa oculta” con la idea de aprender representaciones
+     intermedias (en palabras simples).
+
+5.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Qué se gana con capas densas y no linealidad:
+   La capacidad de resolver problemas difíciles con fronteras chuecas o curvas. Si solo se pusieran capas densas sin funciones no lineales, matemáticamente sería como tener una sola capa plana. La no linealidad le permite doblar el espacio para separar cosas que con líneas rectas no se pueden
+
+2. Riesgo de hacer la red muy grande:
+   Que caiga en sobreajuste ya que la red tiene tantos parámetros libres que, en vez de aprender la regla general, simplemente se memoriza las fotos de entrenamiento como si fuera un acordeón para el examen, luego cuando le pasas una imagen nueva se equivoca por completo
+
+3. Capas ocultas y representaciones intermedias:
+   Una capa oculta es como un paso intermedio donde la red junta pistas sueltas para armar conceptos más claros. Por ejemplo, en vez de decidir directo con píxeles sueltos, una capa junta píxeles para reconocer rayas, la siguiente junta rayas para reconocer una rueda, y la última usa las ruedas para saber si es un carro
+
+
+6 Pregunta 5 — Entrenamiento sin magia
+══════════════════════════════════════
+
+  1. Explica qué es una *época* a nivel intuitivo.
+  2. ¿Hacia qué “objetivo” se mueven los pesos cuando hablamos de
+     minimizar el error?
+  3. Si el learning rate es absurdo (muy grande o muy chico), ¿qué
+     síntomas conceptuales esperarías?
+
+6.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Qué es una época:
+   Es darle una vuelta completa a todo el conjunto de datos significando que la red ya vio, calculó el error y ajustó sus pesos con todas y cada una de las imágenes de entrenamiento una vez
+
+2. Hacia dónde se mueven los pesos:
+   Se van ajustando paso a paso para que el error sea lo más chico posible
+
+3. Síntomas de un learning rate absurdo:
+   - Muy grande: Da brincos muy grandes, se pasa de largo, rebota de un lado a otro y el error empieza a volverse loco o marca error `NaN`
+   - Muy chico: Da pasos tan pequeños que parece que está congelada. Tarda horas entrenando y el error casi no baja nada entre una época y otra
+
+
+7 Pregunta 6 — Bloques de una CNN
+═════════════════════════════════
+
+  Sin matemáticas, di el papel de cada pieza:
+  1. Kernel / filtro convolucional
+  2. Función de activación después de conv
+  3. Max pooling
+  4. Capa densa + softmax al final de un clasificador
+
+7.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Kernel / filtro convolucional:
+   Es una ventanita que va recorriendo la imagen buscando un detalle específico, como bordes, esquinas o cambios de color. Si encuentra lo que busca, da una señal fuerte en esa zona
+
+2. Función de activación después de conv (como ReLU):
+   Sirve para filtrar. Lo que dio negativo o no le interesa lo apaga y lo pone en cero dejando pasar solo las activaciones positivas importantes. Esto ayuda a que la red no sea una simple suma plana
+
+3. Max pooling:
+   Hace la imagen más chica para ahorrar trabajo a la computadora. Agarra cuadros de 2x2 y se queda solo con el número más alto ignorando el resto
+
+4. Capa densa + Softmax al final:
+   La capa densa junta todas las pistas que encontraron los filtros anteriores y Softmax las convierte en un porcentaje para cada clase diciéndote cuál es la opción que gano
+
+
+8 Pregunta 7 — XOR y la historia del aprendizaje
+════════════════════════════════════════════════
+
+  1. ¿Por qué XOR se volvió un “contraejemplo” famoso?
+  2. ¿Qué elemento de un MLP permite patrones que no son una sola línea?
+  3. ¿En qué tipo de tabla/problema del mundo real seguirías usando algo
+     tan simple como un perceptrón o un modelo lineal?
+
+8.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Por qué XOR fue un contraejemplo famoso:
+   Porque en los años 60 demostraron que una sola neurona artificial no era capaz de aprender algo tan simple como la compuerta XOR porque sus respuestas no se pueden separar con una sola línea recta. Eso decepcionó tanto a la comunidad científica que le cortaron el presupuesto a la investigación de redes neuronales por varios años
+
+2. Elemento del MLP que permite hacer cosas que no sean una línea:
+   Al meter neuronas en medio, los datos se transforman y se pueden doblar para que sí queden separados
+
+3. Dónde seguirías usando un modelo lineal simple:
+   En problemas donde necesitas explicar cómo se tomó la decisión y no quieres una caja negra. Por ejemplo, en un banco para decidir si se le da una tarjeta de crédito a alguien según su sueldo y sus deudas; ahí es mejor una regla lineal sencilla que cualquier auditor o cliente pueda entender fácilmente
+
+
+9 Pregunta 8 — De lo simple a lo abstracto en visión
+════════════════════════════════════════════════════
+
+  1. Contrasta lo que buscan capas tempranas vs capas profundas en una
+     CNN.
+  2. ¿Qué intuición da eso para *transfer learning* (aunque no lo hayas
+     programado)?
+  3. ¿Cuándo sospecharías que tu CNN es “profunda de más” para el
+     dataset del curso?
+
+9.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Capas del inicio vs capas del final:
+   - Capas del inicio: Ven cosas muy básicas y pequeñas como líneas rectas, rayas diagonales, contrastes de luz y esquinas
+   - Capas del final: Ya juntan todo eso y reconocen cosas completas, como una nariz, una oreja, un ojo o la silueta de un animal
+
+2. Qué intuición da para Transfer Learning:
+   Como las primeras capas solo aprenden cosas universales que están en cualquier foto del mundo se puede agarrar un modelo ya entrenado con millones de fotos de internet, aprovechar que ya puede ver bordes y solo reentrenar la última parte con nuestras pocas fotos del curso
+
+3. Cuándo sospechas que la CNN es profunda de más:
+   - Cuando ves que en entrenamiento saca casi 100% de precisión pero en validación se queda atorada en números muy bajos 
+   - Cuando metiste tantos Max Pooling que la imagen se encogió tanto que llegó a ser de 1x1 o 2x2 mucho antes de llegar a la salida, perdiendo toda la información visual
+
+
+10 Pregunta 9 — Análisis: matching problema → modelo
+════════════════════════════════════════════════════
+
+  Elige *Perceptrón/lineal* / *MLP* / *CNN* (una opción) y justifica en
+  una frase:
+
+  1. Predecir “compra / no compra” con edad, ingreso y visitas a la web
+     (columnas numéricas).
+  2. Detectar si hay un gato en una foto.
+  3. Aproximar una frontera “curva” o a trozos en datos 2D tabulares.
+  4. ¿CNN es la herramienta natural para predecir la siguiente palabra
+     de un párrafo? Justifica y nombra una familia del curso más
+     adecuada (RNN/Transformer a nivel nombre).
+
+10.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Predecir compra/no compra con edad, ingreso y visitas:
+   - **Modelo:** Perceptrón / modelo lineal (o MLP chiquito).
+   - **Justificación:** Son poquitas columnas numéricas en una tabla donde una combinación sencilla de pesos alcanza para ver la tendencia de compra.
+
+2. Detectar si hay un gato en una foto:
+   -  CNN.
+   - Justificación: Es una imagen con dos dimensiones donde los filtros pueden buscar bigotes u orejas sin importar en qué parte de la foto aparezca el gato
+
+3. Aproximar una frontera curva en datos 2D tabulares:
+   - MLP.
+   - Justificación: Como son datos tabulares pero la frontera no es recta sus capas ocultas con activaciones no lineales permiten curvar la separación
+
+4. ¿Una CNN para predecir la siguiente palabra de un texto?
+   - Respuesta: No, porque el texto es una secuencia que se lee en orden y depende mucho de lo que se dijo antes en la oración
+   - Familia adecuada: Modelos de lenguaje como RNN y Transformers
+
+
+11 Pregunta 10 — Análisis: auditoría de un equipo
+═════════════════════════════════════════════════
+
+  Un equipo entrega un modelo “muy preciso” en su laptop y falla con
+  datos nuevos.
+
+  1. ¿Qué diagnósticos conceptuales harías *antes* de tocar
+     hiperparámetros al azar?
+  2. Pide *dos* evidencias que deberían mostrar en la defensa (curvas,
+     separación train/val, ejemplos de error, etc.).
+  3. Redacta *tres* preguntas tuyas para comprobar si saben cuándo usar
+     perceptrón, MLP o CNN (distintas a las del Grupo A si las conoces).
+
+11.0.1 Respuesta
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+
+1. Diagnósticos que haría antes de moverle a nada:
+   - Revisar si no hicieron trampa sin querer mezclando fotos parecidas en el entrenamiento y en la prueba 
+   - Ver si las fotos de prueba en su laptop tenían una luz o fondo especial que no existe en el mundo real
+   - Ver si la red simplemente se memorizó las imágenes de su computadora porque era demasiado grande para las pocas fotos que tenían 
+
+2. Dos evidencias que les pediría mostrar:
+   - Las gráficas de pérdida de entrenamiento contra validación para ver si la línea de validación empezó a subir mientras la de entrenamiento bajaba
+   - Una matriz de confusión probada con fotos completamente nuevas que el modelo nunca haya visto para ver en qué clases se está equivocando realmente
+
+3. Tres preguntas para revisar si de verdad entendieron:
+   - Si tengo un archivo de Excel con 5 columnas de datos de clientes, ¿por qué no tiene sentido meterle una CNN?
+   - Si en una tabla desordeno las columnas el MLP sigue aprendiendo igual, pero si desordeno los píxeles de una foto la CNN se muere. ¿Por que?
+   - Si una sola neurona ya me da 90% de aciertos en un problema simple, ¿para que meteria una red de 4 capas ocultas?
